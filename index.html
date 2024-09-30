@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora Avanzada</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+    <h1>Calculadora Avanzada</h1>
+
+    <div class="calculadora">
+        <input type="text" id="pantalla" disabled>
+
+        <div class="botones">
+            <!-- Fila de botones -->
+            <button class="boton" onclick="agregarNumero('7')">7</button>
+            <button class="boton" onclick="agregarNumero('8')">8</button>
+            <button class="boton" onclick="agregarNumero('9')">9</button>
+            <button class="boton operador" onclick="seleccionarOperacion('dividir')">/</button>
+
+            <!-- Fila de botones -->
+            <button class="boton" onclick="agregarNumero('4')">4</button>
+            <button class="boton" onclick="agregarNumero('5')">5</button>
+            <button class="boton" onclick="agregarNumero('6')">6</button>
+            <button class="boton operador" onclick="seleccionarOperacion('multiplicar')">*</button>
+
+            <!-- Fila de botones -->
+            <button class="boton" onclick="agregarNumero('1')">1</button>
+            <button class="boton" onclick="agregarNumero('2')">2</button>
+            <button class="boton" onclick="agregarNumero('3')">3</button>
+            <button class="boton operador" onclick="seleccionarOperacion('restar')">-</button>
+
+            <!-- Fila de botones -->
+            <button class="boton" onclick="agregarNumero('0')">0</button>
+            <button class="boton" onclick="limpiarPantalla()">C</button>
+            <button class="boton" onclick="calcular()">=</button>
+            <button class="boton operador" onclick="seleccionarOperacion('sumar')">+</button>
+        </div>
+    </div>
+
+    <script>
+        let num1 = "";
+        let num2 = "";
+        let operacion = "";
+
+        function agregarNumero(numero) {
+            const pantalla = document.getElementById('pantalla');
+            if (operacion === "") {
+                num1 += numero;
+                pantalla.value = num1;
+            } else {
+                num2 += numero;
+                pantalla.value = num2;
+            }
+        }
+
+        function seleccionarOperacion(op) {
+            operacion = op;
+        }
+
+        function limpiarPantalla() {
+            num1 = "";
+            num2 = "";
+            operacion = "";
+            document.getElementById('pantalla').value = "";
+        }
+
+        async function calcular() {
+            if (num1 !== "" && num2 !== "" && operacion !== "") {
+                const response = await fetch(`/cgi-bin/calculadora.cgi?num1=${num1}&num2=${num2}&operacion=${operacion}`);
+                const resultado = await response.text();
+                document.getElementById('pantalla').value = resultado;
+                // Reiniciar los valores para una nueva operación
+                num1 = "";
+                num2 = "";
+                operacion = "";
+            }
+        }
+    </script>
+</body>
+</html>
